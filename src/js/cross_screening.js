@@ -692,10 +692,14 @@ const CrossScreeningManager = {
         }
 
         if (column === 'impactDays') {
-            const numValue = parseFloat(value);
-            if (!isNaN(numValue)) {
-                return numValue.toFixed(1);
+            const impactValue = parseFloat(stock.tradingImpact);
+            if (!isNaN(impactValue) && Math.abs(impactValue) >= 100000000) {
+                const numValue = parseFloat(value);
+                if (!isNaN(numValue)) {
+                    return numValue.toFixed(1);
+                }
             }
+            return '-';
         }
 
         return value;
