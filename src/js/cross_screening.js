@@ -387,10 +387,10 @@ const CrossScreeningManager = {
 
                 if (this.currentFilters.indexNK225 || this.currentFilters.indexJPX400 || this.currentFilters.indexTOPIX) {
                     let hasIndex = false;
-                    if (this.currentFilters.indexNK225 && company.indexAdoption && company.indexAdoption.includes('101')) {
+                    if (this.currentFilters.indexNK225 && company.indexAdoption && company.indexAdoption.includes('日経平均')) {
                         hasIndex = true;
                     }
-                    if (this.currentFilters.indexJPX400 && company.indexAdoption && company.indexAdoption.includes('105')) {
+                    if (this.currentFilters.indexJPX400 && company.indexAdoption && company.indexAdoption.includes('JPX日経400')) {
                         hasIndex = true;
                     }
                     if (this.currentFilters.indexTOPIX && stock.status !== '除外') {
