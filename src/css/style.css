@@ -198,6 +198,48 @@ body {
     color: #0078D7;
 }
 
+.cache-notice {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #FFF9E6;
+    border: 2px solid #FFA500;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cache-notice p {
+    margin: 0 0 8px 0;
+    color: #333333;
+}
+
+.cache-notice p:last-of-type {
+    margin-bottom: 12px;
+}
+
+.cache-notice ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 16px;
+}
+
+.cache-notice ul li {
+    margin: 4px 0;
+    padding-left: 16px;
+    position: relative;
+}
+
+.cache-notice ul li:before {
+    content: "■";
+    position: absolute;
+    left: 0;
+    color: #FFA500;
+}
+
+.cache-notice strong {
+    color: #D2691E;
+}
+
 .company-detail {
     padding: 16px;
 }
