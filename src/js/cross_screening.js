@@ -22,7 +22,7 @@ const CrossScreeningManager = {
     },
 
     defaultColumnOrder: [
-        'index', 'status', 'code', 'name', 'industry', 'cumulativeRatio',
+        'index', 'status', 'code', 'name', 'industry', 'cumulativeRatio', 'turnoverRate',
         'januaryMarketCap', 'floatingMarketCap', 'oldWeight', 'newWeight', 'weightChange'
     ],
 
