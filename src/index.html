@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投資情報端末</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="header-title"><a href="#" class="header-title-link">投資情報端末</a></h1>
+            <div class="header-info">
+                <span id="company-count">読み込み中...</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="search-panel">
+                <div class="search-box">
+                    <label for="search-input" class="search-label">銘柄検索</label>
+                    <input
+                        type="text"
+                        id="search-input"
+                        class="search-input"
+                        placeholder="企業名、略称、カナ、または証券コードを入力"
+                        autocomplete="off"
+                    >
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="welcome-screen" class="welcome-screen">
+                    <div class="welcome-message">
+                        <h2>投資情報端末へようこそ</h2>
+                        <p>上部の検索ボックスから企業を検索してください。</p>
+                        <ul class="search-tips">
+                            <li>企業名、略称、カナ、証券コードで検索できます</li>
+                            <li>ひらがな・全角カタカナでも検索可能です</li>
+                            <li>入力中に候補が表示されます</li>
+                        </ul>
+                        <div class="industry-links">
+                            <h3>業種別一覧</h3>
+                            <div class="industry-link-buttons">
+                                <button class="industry-link-btn" data-industry-type="tse">東証33業種</button>
+                                <button class="industry-link-btn" data-industry-type="nikkei-middle">日経業種（中分類）</button>
+                                <button class="industry-link-btn" data-industry-type="nikkei">日経業種（小分類）</button>
+                                <button class="industry-link-btn" data-industry-type="factset">FACTSET業種</button>
+                            </div>
+                        </div>
+                        <div class="industry-links">
+                            <h3>市場別一覧</h3>
+                            <div class="industry-link-buttons">
+                                <a href="#tp" class="market-link-btn market-link-prime">東証プライム</a>
+                                <a href="#ts" class="market-link-btn market-link-standard">東証スタンダード</a>
+                                <a href="#tg" class="market-link-btn market-link-growth">東証グロース</a>
+                            </div>
+                        </div>
+                        <div class="industry-links">
+                            <h3>指数別一覧</h3>
+                            <div class="industry-link-buttons">
+                                <a href="#101" class="index-link-btn index-link-nk225">日経平均</a>
+                                <a href="#105" class="index-link-btn index-link-jpx400">JPX日経400</a>
+                                <a href="#103" class="index-link-btn index-link-nk300">日経300</a>
+                                <a href="#102" class="index-link-btn index-link-nk500">日経500</a>
+                            </div>
+                        </div>
+                        <div class="industry-links">
+                            <h3>業績分析</h3>
+                            <div class="industry-link-buttons">
+                                <a href="#upward-revision" class="upward-revision-link-btn">上方修正予測ランキング</a>
+                            </div>
+                        </div>
+                        <div class="industry-links">
+                            <h3>決算スケジュール</h3>
+                            <div class="industry-link-buttons">
+                                <button class="earnings-calendar-link-btn" data-action="earnings-calendar">決算発表カレンダー</button>
+                            </div>
+                        </div>
+                        <div class="industry-links">
+                            <h3>横断スクリーニング</h3>
+                            <div class="industry-link-buttons">
+                                <a href="#cross-screening" class="cross-screening-link-btn">横断スクリーニング</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="industry-list" class="industry-list hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2 id="industry-list-title"></h2>
+                        </div>
+                        <button id="close-industry-list" class="close-button">×</button>
+                    </div>
+                    <div class="industry-content" id="industry-content"></div>
+                </div>
+
+                <div id="industry-companies" class="industry-companies hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2 id="industry-companies-title"></h2>
+                            <span id="industry-companies-count" class="stock-code"></span>
+                        </div>
+                        <button id="close-industry-companies" class="close-button">×</button>
+                    </div>
+                    <div class="companies-table-container">
+                        <table class="companies-table" id="companies-table">
+                            <thead>
+                                <tr>
+                                    <th>証券コード</th>
+                                    <th>企業名</th>
+                                    <th>上場市場</th>
+                                </tr>
+                            </thead>
+                            <tbody id="companies-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="upward-revision-ranking" class="upward-revision-ranking hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2>上方修正予測ランキング</h2>
+                            <span id="ranking-count" class="stock-code"></span>
+                        </div>
+                        <button id="close-ranking" class="close-button">×</button>
+                    </div>
+
+                    <div class="ranking-filters">
+                        <div class="filter-group">
+                            <label>営業利益進捗率:</label>
+                            <select id="progress-filter">
+                                <option value="0">全て</option>
+                                <option value="30">30%以上</option>
+                                <option value="50" selected>50%以上</option>
+                                <option value="75">75%以上</option>
+                                <option value="100">100%以上</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>過去上方修正回数:</label>
+                            <select id="upward-count-filter">
+                                <option value="0" selected>全て</option>
+                                <option value="1">1回以上</option>
+                                <option value="2">2回以上</option>
+                                <option value="3">3回以上</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>為替上振れ期待:</label>
+                            <select id="exchange-impact-filter">
+                                <option value="none" selected>全て</option>
+                                <option value="positive">プラス影響のみ</option>
+                                <option value="5">影響率5%以上</option>
+                                <option value="10">影響率10%以上</option>
+                                <option value="15">影響率15%以上</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>決算月:</label>
+                            <select id="fiscal-month-filter">
+                                <option value="">全て</option>
+                                <option value="3月" selected>3月</option>
+                                <option value="6月">6月</option>
+                                <option value="9月">9月</option>
+                                <option value="12月">12月</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>最新Q:</label>
+                            <select id="quarter-filter">
+                                <option value="">全て</option>
+                                <option value="1Q">1Q</option>
+                                <option value="2Q" selected>2Q</option>
+                                <option value="3Q">3Q</option>
+                                <option value="4Q">4Q</option>
+                            </select>
+                        </div>
+                        <select id="score-filter" style="display: none;">
+                            <option value="0-999" selected>全て</option>
+                        </select>
+                    </div>
+
+                    <div class="ranking-table-container">
+                        <table class="ranking-table" id="ranking-table">
+                            <thead>
+                                <tr>
+                                    <th>順位</th>
+                                    <th>証券コード</th>
+                                    <th>企業名</th>
+                                    <th>決算月</th>
+                                    <th>最新Q</th>
+                                    <th>営業益進捗率</th>
+                                    <th>過去上方修正</th>
+                                    <th>予想営業益</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="company-detail" class="company-detail hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2 id="detail-company-name"></h2>
+                            <div class="code-and-markets">
+                                <span id="detail-stock-code" class="stock-code"></span>
+                                <span id="detail-market-badges"></span>
+                                <span id="detail-topix-badge"></span>
+                            </div>
+                        </div>
+                        <button id="close-detail" class="close-button">×</button>
+                    </div>
+
+                    <div class="detail-content">
+                        <div class="section-row">
+                            <section class="detail-section">
+                                <h3 class="section-title">基本情報</h3>
+                                <table class="detail-table">
+                                    <tr>
+                                        <th>証券コード</th>
+                                        <td id="info-stock-code"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>正式企業名</th>
+                                        <td id="info-formal-name"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>略称</th>
+                                        <td id="info-short-name"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>カナ</th>
+                                        <td id="info-kana"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>英文社名</th>
+                                        <td id="info-english-name"></td>
+                                    </tr>
+                                </table>
+                            </section>
+
+                            <section class="detail-section">
+                                <h3 class="section-title">決算情報</h3>
+                                <table class="detail-table">
+                                    <tr>
+                                        <th>決算期</th>
+                                        <td id="info-fiscal-period"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>配当基準日</th>
+                                        <td id="info-dividend-date"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>決算発表予定日</th>
+                                        <td id="info-earnings-schedule"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>決算発表履歴</th>
+                                        <td id="info-earnings-history"></td>
+                                    </tr>
+                                </table>
+                            </section>
+                        </div>
+
+                        <div class="section-row">
+                            <section class="detail-section">
+                                <h3 class="section-title">市場情報</h3>
+                                <table class="detail-table">
+                                    <tr>
+                                        <th>優先市場</th>
+                                        <td id="info-primary-market"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>売買単位</th>
+                                        <td id="info-trading-unit"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>発行済株式総数</th>
+                                        <td id="info-outstanding-shares"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>配信開始日</th>
+                                        <td id="info-listing-date"></td>
+                                    </tr>
+                                </table>
+                            </section>
+
+                            <section class="detail-section">
+                                <h3 class="section-title">分類情報</h3>
+                                <table class="detail-table">
+                                    <tr>
+                                        <th>FACTSET業種</th>
+                                        <td id="info-factset-industry"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>協会業種</th>
+                                        <td id="info-kyokai-industry"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>日経業種(中分類)</th>
+                                        <td id="info-nikkei-industry-middle"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>日経業種(小分類)</th>
+                                        <td id="info-nikkei-industry"></td>
+                                    </tr>
+                                </table>
+                            </section>
+                        </div>
+
+                        <section class="detail-section">
+                            <h3 class="section-title">企業情報</h3>
+                            <table class="detail-table">
+                                <tr>
+                                    <th>EDINETコード</th>
+                                    <td id="info-edinet-code"></td>
+                                </tr>
+                                <tr>
+                                    <th>新証券コード</th>
+                                    <td id="info-new-code"></td>
+                                </tr>
+                                <tr>
+                                    <th>HPアドレス</th>
+                                    <td id="info-website"></td>
+                                </tr>
+                                <tr>
+                                    <th>旧社名・旧商号</th>
+                                    <td id="info-old-name"></td>
+                                </tr>
+                            </table>
+                        </section>
+
+                        <div class="section-row">
+                            <section class="detail-section" id="company-info-section">
+                                <h3 class="section-title">企業概要</h3>
+                                <div class="text-content" id="info-company-description"></div>
+                            </section>
+
+                            <section class="detail-section" id="parent-child-relation-section">
+                                <h3 class="section-title">親子上場関係</h3>
+                                <div id="parent-child-relation-content">
+                                </div>
+                                <div id="parent-companies-container" style="display: none;">
+                                    <h4 class="subsection-title">親会社</h4>
+                                    <table class="detail-table">
+                                        <thead>
+                                            <tr>
+                                                <th>証券コード</th>
+                                                <th>企業名</th>
+                                                <th class="text-right">持株比率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="parent-companies-list"></tbody>
+                                    </table>
+                                </div>
+                                <div id="child-companies-container" style="display: none;">
+                                    <h4 class="subsection-title">子会社</h4>
+                                    <table class="detail-table">
+                                        <thead>
+                                            <tr>
+                                                <th>証券コード</th>
+                                                <th>企業名</th>
+                                                <th class="text-right">持株比率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="child-companies-list"></tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="section-row">
+                            <section class="detail-section" id="performance-chart-section" style="display: none;">
+                                <h3 class="section-title">業績推移</h3>
+                                <div class="performance-charts">
+                                    <div class="chart-container">
+                                        <h4 class="chart-title">売上高推移（百万円）</h4>
+                                        <canvas id="sales-chart" width="400" height="200"></canvas>
+                                    </div>
+                                    <div class="chart-container">
+                                        <h4 class="chart-title">営業利益推移（百万円）</h4>
+                                        <canvas id="operating-profit-chart" width="400" height="200"></canvas>
+                                    </div>
+                                    <div class="chart-container">
+                                        <h4 class="chart-title">純利益推移（百万円）</h4>
+                                        <canvas id="net-profit-chart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="detail-section" id="quarterly-pattern-section">
+                                <h3 class="section-title">四半期業績パターン分析（過去5年）</h3>
+                                <div class="quarterly-pattern-content">
+                                    <canvas id="quarterly-pattern-chart" width="500" height="300"></canvas>
+                                    <div class="quarterly-pattern-summary">
+                                        <p id="quarterly-pattern-description"></p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <section class="detail-section" id="shareholder-info-section">
+                            <h3 class="section-title">株主情報</h3>
+                            <div class="shareholder-content">
+                                <div class="shareholder-chart-container">
+                                    <h4 class="subsection-title">株主構成</h4>
+                                    <canvas id="shareholder-chart" width="400" height="300"></canvas>
+                                </div>
+                                <div class="major-shareholders-container">
+                                    <h4 class="subsection-title">大株主（上位10名）</h4>
+                                    <table class="shareholder-table">
+                                        <thead>
+                                            <tr>
+                                                <th>株主名</th>
+                                                <th class="text-right">保有比率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="major-shareholders-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="section-row">
+                            <section class="detail-section" id="revenue-composition-section">
+                                <h3 class="section-title">収益構成</h3>
+                                <div class="revenue-composition-content">
+                                    <div class="revenue-chart-container">
+                                        <canvas id="revenue-composition-chart" width="400" height="300"></canvas>
+                                    </div>
+                                    <div class="revenue-legend-container">
+                                        <table class="revenue-legend-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>事業</th>
+                                                    <th class="text-right">構成比</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="revenue-legend-list"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section class="detail-section" id="exchange-rate-section">
+                                <h3 class="section-title">為替感応度分析</h3>
+                                <div class="exchange-rate-content">
+                                    <table class="exchange-rate-table">
+                                        <tbody id="exchange-rate-data"></tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+
+                        <section class="detail-section" id="nikkei-info-section">
+                            <h3 class="section-title">日経会社情報</h3>
+                            <div class="text-content" id="info-nikkei-description"></div>
+                        </section>
+                    </div>
+                </div>
+
+                <div id="shareholder-detail" class="shareholder-detail hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2 id="shareholder-name"></h2>
+                            <span id="shareholder-investment-count" class="stock-code"></span>
+                        </div>
+                        <button id="close-shareholder-detail" class="close-button">×</button>
+                    </div>
+
+                    <div class="detail-content">
+                        <section class="detail-section">
+                            <h3 class="section-title">投資先一覧</h3>
+                            <div class="companies-table-container">
+                                <table class="companies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>証券コード</th>
+                                            <th>企業名</th>
+                                            <th class="text-right">保有比率</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="shareholder-investments-body"></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <div id="earnings-calendar" class="earnings-calendar hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2>決算発表カレンダー</h2>
+                        </div>
+                        <button id="close-earnings-calendar" class="close-button">×</button>
+                    </div>
+
+                    <div class="calendar-controls">
+                        <button id="prev-month-btn" class="month-nav-btn">◀ 前月</button>
+                        <h3 id="calendar-year-month" class="calendar-year-month">2026年1月</h3>
+                        <button id="next-month-btn" class="month-nav-btn">次月 ▶</button>
+                    </div>
+
+                    <div id="calendar-grid" class="calendar-grid"></div>
+
+                    <div id="earnings-companies-list" class="earnings-companies-list hidden">
+                        <div class="earnings-filters">
+                            <div class="filter-section">
+                                <label class="filter-label">決算期：</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="1Q" class="quarter-filter"> 1Q</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="2Q" class="quarter-filter"> 2Q</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="3Q" class="quarter-filter"> 3Q</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="本決算" class="quarter-filter"> 本決算</label>
+                            </div>
+                            <div class="filter-section">
+                                <label class="filter-label">市場：</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="プライム" class="market-filter"> プライム</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="スタンダード" class="market-filter"> スタンダード</label>
+                                <label class="filter-checkbox"><input type="checkbox" value="グロース" class="market-filter"> グロース</label>
+                            </div>
+                            <div class="filter-section">
+                                <label class="filter-label">特徴：</label>
+                                <label class="filter-checkbox"><input type="checkbox" id="filter-exchange-impact"> 為替インパクトあり</label>
+                                <label class="filter-checkbox"><input type="checkbox" id="filter-upward-revision"> 上方修正期待</label>
+                                <label class="filter-checkbox"><input type="checkbox" id="filter-nikkei225"> 日経平均採用</label>
+                                <label class="filter-checkbox"><input type="checkbox" id="filter-pattern-change"> 親会社と同日化</label>
+                                <label class="filter-checkbox"><input type="checkbox" id="filter-parent-same-date"> 親会社と同日</label>
+                            </div>
+                        </div>
+                        <div class="earnings-companies-header">
+                            <h3 id="earnings-date-title">2026年1月15日の決算発表予定</h3>
+                            <span id="earnings-companies-count" class="stock-code">50社</span>
+                        </div>
+                        <div class="companies-table-container">
+                            <table class="companies-table">
+                                <thead>
+                                    <tr>
+                                        <th>証券コード</th>
+                                        <th>企業名</th>
+                                        <th>決算期</th>
+                                        <th>発表時刻</th>
+                                        <th>市場</th>
+                                        <th>特徴</th>
+                                        <th>関連</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="earnings-companies-table-body"></tbody>
+                            </table>
+                        </div>
+                        <div id="earnings-pagination"></div>
+                    </div>
+                </div>
+
+                <div id="cross-screening" class="cross-screening hidden">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2>横断スクリーニング</h2>
+                            <span id="cross-screening-count" class="stock-code"></span>
+                        </div>
+                        <button id="close-cross-screening" class="close-button">×</button>
+                    </div>
+
+                    <div class="ranking-filters">
+                        <div class="filter-group">
+                            <button id="open-column-selector" class="column-selector-button">フィルター・表示設定</button>
+                        </div>
+                        <div class="filter-summary" id="filter-summary">
+                            <span>フィルター条件: 全件表示</span>
+                        </div>
+                    </div>
+
+                    <div class="ranking-table-container">
+                        <table class="ranking-table" id="cross-screening-table">
+                            <thead></thead>
+                            <tbody id="cross-screening-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="column-selector-dialog" class="modal hidden">
+        <div class="modal-content column-selector-content">
+            <div class="modal-header">
+                <h2>フィルター・表示設定</h2>
+                <button id="close-column-selector" class="close-button">×</button>
+            </div>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="filters">フィルター条件</button>
+                    <button class="tab-button" data-tab="basic">基本情報</button>
+                    <button class="tab-button" data-tab="marketcap">時価総額</button>
+                    <button class="tab-button" data-tab="dividend">配当</button>
+                    <button class="tab-button" data-tab="profit">営業利益</button>
+                    <button class="tab-button" data-tab="topix">TOPIX</button>
+                    <button class="tab-button" data-tab="margin">信用残</button>
+                    <button class="tab-button" data-tab="buyback">自社株買い</button>
+                    <button class="tab-button" data-tab="other">その他</button>
+                </div>
+
+                <div class="tab-content" id="column-selector-tab-content">
+                    <div class="filter-tab-content" id="filters-tab" style="display: block;">
+                        <div class="filter-section">
+                            <h3>ステータス</h3>
+                            <div class="filter-button-group">
+                                <button class="filter-btn active" data-filter="status" data-value="継続">継続</button>
+                                <button class="filter-btn active" data-filter="status" data-value="新規">新規</button>
+                                <button class="filter-btn active" data-filter="status" data-value="除外">除外</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>上場市場</h3>
+                            <div class="filter-button-group">
+                                <button class="filter-btn active" data-filter="market" data-value="ﾌﾟﾗｲﾑ">プライム</button>
+                                <button class="filter-btn active" data-filter="market" data-value="ｽﾀﾝﾀﾞｰﾄﾞ">スタンダード</button>
+                                <button class="filter-btn active" data-filter="market" data-value="ｸﾞﾛｰｽ">グロース</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>指数構成銘柄</h3>
+                            <div class="filter-button-group">
+                                <button class="filter-btn" data-filter="index" data-value="nk225">日経平均採用銘柄</button>
+                                <button class="filter-btn" data-filter="index" data-value="jpx400">JPX日経400銘柄</button>
+                                <button class="filter-btn" data-filter="index" data-value="topix">新TOPIX採用銘柄</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>特性</h3>
+                            <div class="filter-button-group">
+                                <button class="filter-btn" data-filter="characteristic" data-value="peak-update">最高益更新</button>
+                                <button class="filter-btn" data-filter="characteristic" data-value="new-buyback">新規自社株買い</button>
+                                <button class="filter-btn" data-filter="characteristic" data-value="dividend-increase">今期増配</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>回転率</h3>
+                            <div class="filter-button-group">
+                                <button class="filter-btn active" data-filter="turnover" data-value="0">全て</button>
+                                <button class="filter-btn" data-filter="turnover" data-value="0.14">0.14以上（継続基準）</button>
+                                <button class="filter-btn" data-filter="turnover" data-value="0.20">0.20以上（追加基準）</button>
+                                <button class="filter-btn" data-filter="turnover" data-value="1.0">1.0以上</button>
+                                <button class="filter-btn" data-filter="turnover" data-value="2.0">2.0以上</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>東証33業種</h3>
+                            <div class="filter-button-group" id="tse-industry-buttons"></div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h3>日経業種（中分類）</h3>
+                            <div class="filter-button-group" id="nikkei-industry-buttons"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-column-selector" class="cancel-button">キャンセル</button>
+                <button id="apply-column-selector" class="ok-button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/exchange_rates.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/topix_data.js"></script>
+    <script src="js/cross_screening.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/earnings_history.js"></script>
+    <script src="js/earnings_calendar.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
