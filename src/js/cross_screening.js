@@ -538,10 +538,10 @@ const CrossScreeningManager = {
                 const value = this.formatCellValue(column, stock, index);
                 td.innerHTML = value;
 
-                if (column === 'code') {
+                if (column === 'code' || column === 'name') {
                     td.style.cursor = 'pointer';
                     td.addEventListener('click', () => {
-                        window.location.hash = `company/${stock.code}`;
+                        window.location.hash = stock.code;
                     });
                 }
 
@@ -566,7 +566,7 @@ const CrossScreeningManager = {
         }
 
         if (column === 'code') {
-            return `<a href="#${stock.code}" class="company-link">${value}</a>`;
+            return value;
         }
 
         if (column === 'name') {
