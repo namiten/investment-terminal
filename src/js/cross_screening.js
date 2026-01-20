@@ -80,7 +80,8 @@ const CrossScreeningManager = {
             filtersTab: document.getElementById('filters-tab'),
             tseIndustryButtons: document.getElementById('tse-industry-buttons'),
             nikkeiIndustryButtons: document.getElementById('nikkei-industry-buttons'),
-            tabButtons: document.querySelectorAll('.tab-button')
+            tabButtons: document.querySelectorAll('.tab-button'),
+            cacheClearButton: document.getElementById('cache-clear-button')
         };
 
         this.initFilterButtons();
@@ -129,6 +130,10 @@ const CrossScreeningManager = {
 
         this.elements.applyColumnSelector.addEventListener('click', () => {
             this.applyDialog();
+        });
+
+        this.elements.cacheClearButton.addEventListener('click', () => {
+            this.clearCache();
         });
 
         this.elements.tabButtons.forEach(button => {
@@ -840,6 +845,16 @@ const CrossScreeningManager = {
     hideCrossScreening() {
         this.elements.crossScreening.classList.add('hidden');
         window.location.hash = '';
+    },
+
+    clearCache() {
+        const confirmMessage = 'データは更新されている可能性があります。\n\nキャッシュをクリアして最新データを読み込みますか？\n\n※ フィルター設定と列の表示設定がリセットされます。';
+
+        if (confirm(confirmMessage)) {
+            localStorage.clear();
+
+            location.reload(true);
+        }
     }
 };
 

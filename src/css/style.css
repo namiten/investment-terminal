@@ -912,6 +912,7 @@ body {
 .ranking-table td {
     padding: 6px 12px;
     border: 1px solid #D0D0D0;
+    font-weight: 500;
 }
 
 .ranking-table tbody tr {
@@ -1720,6 +1721,21 @@ body {
 
 .column-selector-button:hover {
     background-color: #005A9E;
+}
+
+.cache-clear-button {
+    padding: 6px 12px;
+    font-family: 'MS PGothic', 'MS Gothic', sans-serif;
+    font-size: 12px;
+    background-color: #D32F2F;
+    color: #FFFFFF;
+    border: 1px solid #B71C1C;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.cache-clear-button:hover {
+    background-color: #B71C1C;
 }
 
 .column-selector-content {
