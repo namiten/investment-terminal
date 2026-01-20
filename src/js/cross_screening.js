@@ -42,6 +42,7 @@ const CrossScreeningManager = {
         profitType: { name: '利益指標', category: 'profit', required: false, sortable: false, description: '使用している利益指標の種別（営業利益 or 純利益）' },
         peakProfit: { name: '最高利益', category: 'profit', required: false, sortable: true, description: '過去最高の利益（日経会社情報から抽出、億円単位）' },
         peakUpdate: { name: '最高益更新', category: 'characteristic', required: false, sortable: false, description: '予想利益が過去最高を更新する銘柄' },
+        turnoverRate: { name: '売買代金回転率', category: 'topix', required: false, sortable: true, description: '年間売買代金回転率。浮動株時価総額に対する年間売買代金の比率（倍）' },
         cumulativeRatio: { name: '累積比率', category: 'topix', required: false, sortable: true, description: 'TOPIX構成銘柄の時価総額累積比率。上位から何%を占めるか' },
         oldWeight: { name: '旧ウェイト', category: 'topix', required: false, sortable: true, description: '入替前のTOPIX内でのウェイト（構成比率）' },
         newWeight: { name: '新ウェイト', category: 'topix', required: false, sortable: true, description: '入替後のTOPIX内でのウェイト（構成比率）' },
@@ -681,7 +682,7 @@ const CrossScreeningManager = {
         }
 
         if (['marketCapChangeRate', 'dividendChangeRate', 'cumulativeRatio', 'oldWeight', 'newWeight', 'weightChange',
-             'marginBuyRatio', 'marginSellRatio', 'requiredGrowth'].includes(column)) {
+             'marginBuyRatio', 'marginSellRatio', 'requiredGrowth', 'turnoverRate'].includes(column)) {
             const numValue = parseFloat(value);
             if (!isNaN(numValue)) {
                 return numValue.toFixed(2);
