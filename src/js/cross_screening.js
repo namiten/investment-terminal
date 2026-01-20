@@ -22,15 +22,8 @@ const CrossScreeningManager = {
     },
 
     defaultColumnOrder: [
-        'index', 'status', 'code', 'name', 'market', 'industry',
-        'januaryMarketCap', 'floatingMarketCap', 'marketCapChangeRate',
-        'currentDividend', 'dividendChangeRate',
-        'forecastProfit', 'profitType', 'peakProfit', 'peakUpdate',
-        'assumedExchangeRate', 'averageExchangeRate', 'exchangeDivergenceRate',
-        'cumulativeRatio', 'oldWeight', 'newWeight', 'weightChange', 'tradingImpact', 'impactDays',
-        'liquidity25d', 'marginBuyRatio', 'marginSellRatio',
-        'newBuyback2025', 'buybackAmount',
-        'requiredGrowth'
+        'index', 'status', 'code', 'name', 'industry',
+        'januaryMarketCap', 'floatingMarketCap', 'weightChange', 'newWeight', 'oldWeight', 'cumulativeRatio'
     ],
 
     columnDefinitions: {
